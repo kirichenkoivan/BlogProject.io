@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="container-fluid  text-light">
+    <h2 class="display-4 text-center mt-5 mb-4">Blog Posts</h2>
+    {% for blog_post in blog_posts %}
+      <div class="card mb-4 bg-secondary">
+        <div class="card-body">
+          <h3 class="card-title text-light">{{ blog_post.title }}</h3>
+          <p class="card-text">{{ blog_post.text }}</p>
+          <p class="card-text text-muted">Author: {{ blog_post.author }}</p>
+          <p class="card-text text-muted"><small>Date Added: {{ blog_post.date_added }}</small></p>
+          {% if user.is_authenticated and blog_post.author == user %}
+            <div class="text-right">
+              <a href="{% url 'edit_blog_post' blog_post.id %}" class="btn btn-outline-light btn-sm mr-2">Edit</a>
+              <form action="{% url 'delete_blog_post' blog_post.id %}" method="post" class="d-inline">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-outline-danger btn-sm">Delete</button>
+              </form>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
+
+    {% if user.is_authenticated %}
+      <div class="text-center">
+        <a href="{% url 'create_blog_post' %}" class="btn btn-primary btn-lg mb-4">Add Blog Post</a>
+      </div>
+    {% else %}
+    {% endif %}
+  </div>
+{% endblock %}
